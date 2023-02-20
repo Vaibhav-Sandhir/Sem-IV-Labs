@@ -32,3 +32,12 @@ SELECT instructor.id
 FROM instructor 
 WHERE instructor.id NOT IN (SELECT teaches.id FROM teaches);
 ---------------------------------------------------------------
+
+--Q15----------------------------------------------------------
+SELECT stu.name,c.title,t.year
+  FROM student stu, course c, takes t, section s
+  WHERE s.room_number = 303 AND stu.id = t.id AND c.course_id = s.course_
+id;
+--------------------------------------------------------------
+
+--Q16---------------------------------------------------------
