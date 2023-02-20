@@ -128,4 +128,39 @@ SELECT course_id
   WHERE course.course_id = section.course_id AND year = 2009);
 ----------------------------------------------
 
+--Q16-----------------------------------------
+SELECT course_id
+FROM course c
+WHERE 2 <= (
+SELECT count(course_id)
+FROM section s
+WHERE c.course_id = s.course_id AND dept_name = 'Comp. Sci.');
+----------------------------------------------
+
+--Q17-----------------------------------------
+SELECT avg(salary) Average
+  FROM instructor
+  GROUP BY dept_name
+  HAVING avg(salary) > 42000;
+----------------------------------------------
+
+--Q18-----------------------------------------
+CREATE VIEW all_courses AS (
+  SELECT building, room_number, c.title
+  FROM course c, section s
+  WHERE s.semester = 'Fall' AND year = 2009);
+---------------------------------------------
+
+--Q19----------------------------------------
+SELECT title
+  FROM all_courses;
+---------------------------------------------
+
+--Q20----------------------------------------
+CREATE VIEW department_total_salary AS (
+  SELECT dept_name, sum(salary) Total
+  FROM instructor
+  GROUP BY dept_name);
+---------------------------------------------
+  
   
