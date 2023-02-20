@@ -156,11 +156,11 @@ SELECT title
   FROM all_courses;
 ---------------------------------------------
 
---Q20----------------------------------------
+--Q20-----------------------------------------
 CREATE VIEW department_total_salary AS (
   SELECT dept_name, sum(salary) Total
   FROM instructor
   GROUP BY dept_name);
----------------------------------------------
+----------------------------------------------
   
   
