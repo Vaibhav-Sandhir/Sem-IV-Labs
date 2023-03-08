@@ -94,7 +94,7 @@ WHERE avg_salary >= 50000 AND count>= 2;
 WITH max_budget(val) AS (
 SELECT max(budget)
 FROM department)
-SELECT d.department,d.budget
+SELECT d.dept_name,d.budget
 FROM department d,max_budget m
 WHERE d.budget = m.val;
 ------------------------------
@@ -109,17 +109,76 @@ SELECT avg(tot_salary)
 FROM dept_total_salary)
 SELECT d.dept_name
 FROM dept_total_salary d,avg_salary A
-WHERE d.tot_salary = a.val;
+WHERE d.tot_salary > a.val;
 -----------------------------
 
 --Q15------------------------
 WITH total_enrol (course_id,sec_id,semester,year,count) AS(
 SELECT course_id,sec_id,semester,year,count(id)
 FROM takes
-WHERE sem = 'Fall' AND year = 2017
-GROUP BY course_id,section_id,semester,year)
-SELECT t.course_id,t.section_id,t.semester,t.year,t.count
+WHERE semester = 'Fall' AND year = 2009
+GROUP BY course_id,sec_id,semester,year)
+SELECT t.course_id,t.sec_id,t.semester,t.year,t.count
 FROM total_enrol t
 WHERE t.count = (SELECT max(count)
                  FROM total_enrol);
 ---------------------------
+
+--Q16-----------------------
+WITH total_creds(dept_name,total) AS
+  (SELECT dept_name,sum(tot_cred)
+  FROM student
+  GROUP BY dept_name)
+  SELECT t.dept_name
+  FROM total_creds t
+  WHERE t.total > (SELECT total
+  FROM total_creds
+  WHERE dept_name = 'Finance');
+---------------------------
+
+--Q17----------------------
+SAVEPOINT s1;
+DELETE FROM instructor
+ WHERE dept_name = 'Finance';
+ROLLBACK;
+--------------------------
+
+--Q18---------------------
+Savepoint B;
+DELETE FROM course
+ WHERE dept_name = 'Comp. Sci.';
+ROLLBACK;
+--------------------------
+
+--Q19--------------------
+Savepoint c;
+UPDATE student SET dept_name = 'Finance' WHERE dept_name = 'Comp. Sci.';
+ROLLBACK;
+-------------------------
+
+--Q20---------------------
+Savepoint s2;
+ UPDATE instructor SET Salary =
+  (Case
+  WHEN salary > 100000 THEN salary*1.03
+  ELSE salary*1.05
+  END);
+ROLLBACK;
+-------------------------
+
+--Q21--------------------
+Savepoint s3;
+ INSERT INTO STUDENT(
+  SELECT id,name,dept_name,0
+  FROM instructor
+  WHERE id NOT IN (SELECT id FROM student));
+ROLLBACK;
+-------------------------
+
+--Q22--------------------
+Savepoint s4;
+DELETE FROM instructor
+WHERE salary < (SELECT avg(salary) FROM instructor);
+ROLLBACK;
+-------------------------
+
